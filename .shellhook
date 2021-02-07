@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+export WD=$PWD
+
+alias csvlook="csvlook --no-inference"
+alias shellcheck="shellcheck -e SC1090"

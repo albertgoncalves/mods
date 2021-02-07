@@ -1,0 +1,11 @@
+*
+!.gitignore
+!*.nix
+!.shellhook
+!data/
+!*.csv
+!scripts/
+!*.py
+!*.sh
+!*.stan
+!01_ucb_admit/
