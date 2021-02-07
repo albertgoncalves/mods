@@ -7,8 +7,16 @@ mkShell {
             pandas
             seaborn
         ]))
+        (with rPackages; [
+            coda
+            codetools
+            mvtnorm
+            R
+            rstan
+        ])
         csvkit
         feh
+        glibcLocales
         jq
         shellcheck
     ];
