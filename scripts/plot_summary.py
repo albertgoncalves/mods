@@ -27,7 +27,7 @@ def main():
     n = len(samples.columns)
     w = int(argv[1])
     h = ceil(n / w)
-    (_, axs) = subplots(h, w, figsize=(18, 10))
+    (_, axs) = subplots(h, w, figsize=(28, 15), dpi=65)
     for i in range(h):
         iw = i * w
         for j in range(w):
