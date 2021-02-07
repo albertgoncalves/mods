@@ -20,13 +20,14 @@ def set_data(df):
     df.drop(columns=["applicant_gender", "reject"], inplace=True)
     df.dept = \
         df.dept.map({key: i + 1 for (i, key) in enumerate(df.dept.unique())})
+    assert df.dept.min() == 1
 
 
 def main():
     df = read_csv(FILENAME["data"])
     set_data(df)
     data = df.to_dict(orient="list")
-    data["n"] = len(df)
+    data["n_obs"] = len(df)
     with open(FILENAME["json"], "w") as file:
         dump(data, file)
 
