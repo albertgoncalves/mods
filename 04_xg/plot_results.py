@@ -36,7 +36,8 @@ def main():
         norm.logpdf(xs, mean.shot_mu_x, mean.shot_sigma_x) +
         norm.logpdf(ys, mean.shot_mu_y, mean.shot_sigma_y),
     )
-    shot_prob /= shot_prob.max()
+    shot_prob = \
+        (shot_prob - shot_prob.min()) / (shot_prob.max() - shot_prob.min())
     goal_prob = bernoulli.pmf(1, expit(
         norm.logpdf(xs, mean.goal_mu_x, mean.goal_sigma_x) +
         norm.logpdf(ys, mean.goal_mu_y, mean.goal_sigma_y) +
