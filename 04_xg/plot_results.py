@@ -42,9 +42,8 @@ def sim(samples):
         norm.logpdf(sims["x"], mean.shot_mu_x, mean.shot_sigma_x) +
         norm.logpdf(sims["y"], mean.shot_mu_y, mean.shot_sigma_y),
     )
-    sims["shot_prob"] = \
-        (sims["shot_prob"] - sims["shot_prob"].min()) / \
-        (sims["shot_prob"].max() - sims["shot_prob"].min())
+    m = sims["shot_prob"].min()
+    sims["shot_prob"] = (sims["shot_prob"] - m) / (sims["shot_prob"].max() - m)
     sims["goal_prob"] = bernoulli.pmf(1, expit(
         norm.logpdf(sims["x"], mean.goal_mu_x, mean.goal_sigma_x) +
         norm.logpdf(sims["y"], mean.goal_mu_y, mean.goal_sigma_y) +
