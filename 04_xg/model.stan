@@ -18,15 +18,15 @@ parameters {
 }
 
 model {
-    shot_mu_x ~ normal(0.0, 10.0);
-    shot_mu_y ~ normal(0.0, 5.0);
+    shot_mu_x ~ cauchy(0.0, 10.0);
+    shot_mu_y ~ cauchy(0.0, 5.0);
     shot_sigma_x ~ exponential(1.0);
     shot_sigma_y ~ exponential(1.0);
     goal_mu_x ~ normal(0.0, 10.0);
-    goal_mu_y ~ normal(0.0, 5.0);
-    goal_sigma_x ~ exponential(1.0);
-    goal_sigma_y ~ exponential(1.0);
-    goal_offset ~ normal(0.0, 10.0);
+    goal_mu_y ~ normal(0.0, 2.0);
+    goal_sigma_x ~ exponential(0.5);
+    goal_sigma_y ~ exponential(0.5);
+    goal_offset ~ cauchy(0.0, 1.0);
     x ~ normal(shot_mu_x, shot_sigma_x);
     y ~ normal(shot_mu_y, shot_sigma_y);
     for (i in 1:n_obs) {
