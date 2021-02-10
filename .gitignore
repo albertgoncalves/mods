@@ -9,3 +9,4 @@
 !*.sh
 !*.stan
 !*_ucb_admit/
+!*_xg/
