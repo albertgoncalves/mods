@@ -52,15 +52,8 @@ def main():
     df = read_csv(FILENAME["data"])
     set_data(df)
     columns = ["x", "y", "goal"]
-    # columns = ["x", "y", "goal", "distance", "radians"]
     data = df[columns].to_dict(orient="list")
     data["n_obs"] = len(df)
-    # data["goal_x"] = GOAL["x"]
-    # data["goal_y"] = GOAL["y"]
-    # data["min_x"] = BOUNDS["x"]["min"]
-    # data["max_x"] = BOUNDS["x"]["max"]
-    # data["min_y"] = BOUNDS["y"]["min"]
-    # data["max_y"] = BOUNDS["y"]["max"]
     with open(FILENAME["json"], "w") as file:
         dump(data, file)
 
