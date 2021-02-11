@@ -9,7 +9,7 @@ from numpy import empty
 from pandas import read_csv
 from scipy.special import expit
 from scipy.stats import bernoulli, norm
-from seaborn import histplot, scatterplot
+from seaborn import histplot, kdeplot, scatterplot
 
 import export_data
 
@@ -53,11 +53,12 @@ def sim(samples):
 
 
 def plot(data, samples, sims):
-    fig = figure(figsize=(10, 13.5), dpi=75)
-    gs = GridSpec(2, 2, figure=fig, height_ratios=[1, 5])
+    fig = figure(figsize=(14, 13.5), dpi=75)
+    gs = GridSpec(2, 3, figure=fig, height_ratios=[1, 4])
     ax0 = fig.add_subplot(gs[0, :])
     ax1 = fig.add_subplot(gs[1, 0])
     ax2 = fig.add_subplot(gs[1, 1])
+    ax3 = fig.add_subplot(gs[1, 2])
     histplot(
         samples.pred_goals,
         kde=True,
@@ -72,19 +73,22 @@ def plot(data, samples, sims):
     kwargs = {
         "cmap": "bone",
     }
-    ax1.set_title("shot probability")
-    ax1.tricontourf(sims["y"], sims["x"], sims["shot_prob"], **kwargs)
-    scatterplot(x=data.y, y=data.x, ax=ax1)
-    ax2.set_title("goal probability")
-    ax2.tricontourf(sims["y"], sims["x"], sims["goal_prob"], **kwargs)
-    ax2.set_yticks([])
+    ax1.set_title("obs shot density")
+    kdeplot(x=data.y, y=data.x, fill=True, ax=ax1, **kwargs)
+    ax2.set_title("pred shot probability")
+    ax2.tricontourf(sims["y"], sims["x"], sims["shot_prob"], **kwargs)
+    for ax in [ax1, ax2]:
+        scatterplot(x=data.y, y=data.x, alpha=0.5, ax=ax)
+    ax3.set_title("pred goal probability")
+    ax3.tricontourf(sims["y"], sims["x"], sims["goal_prob"], **kwargs)
+    ax3.set_yticks([])
     scatterplot(
         x=data.y,
         y=data.x,
         hue=data.goal.map({0: False, 1: True}),
-        ax=ax2,
+        ax=ax3,
     )
-    for ax in [ax1, ax2]:
+    for ax in [ax1, ax2, ax3]:
         ax.set_aspect("equal")
         ax.set_xlim([-45.0, 45.0])
         ax.set_ylim([200.0, 0.0])
