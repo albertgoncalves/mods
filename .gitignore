@@ -3,7 +3,7 @@
 !*.nix
 !.shellhook
 !data/
-!*.csv
+!data/*.csv
 !scripts/
 !*.py
 !*.sh
