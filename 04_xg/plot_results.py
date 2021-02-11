@@ -5,10 +5,10 @@ from os.path import join
 
 from matplotlib.gridspec import GridSpec
 from matplotlib.pyplot import close, figure, savefig, tight_layout
-from numpy import empty
+from numpy import arctan2, empty, sqrt
 from pandas import read_csv
 from scipy.special import expit
-from scipy.stats import bernoulli, norm
+from scipy.stats import bernoulli, beta, norm
 from seaborn import histplot, kdeplot, scatterplot
 
 import export_data
@@ -37,10 +37,31 @@ def sim(samples):
             sims["x"][i] = x
             sims["y"][i] = y
             i += 1
+    # sims["delta"] = {
+    #     key: sims[key] - export_data.GOAL[key] for key in ["x", "y"]
+    # }
+    # sims["distance"] = sqrt(
+    #     (sims["delta"]["x"] * sims["delta"]["x"]) +
+    #     (sims["delta"]["y"] * sims["delta"]["y"]),
+    # )
+    # sims["radians"] = arctan2(
+    #     sims["y"] - export_data.GOAL["y"],
+    #     sims["x"] - export_data.GOAL["x"],
+    # )
+    # sims["scale_x"] = \
+    #     (sims["x"] - export_data.BOUNDS["x"]["min"]) / \
+    #     (export_data.BOUNDS["x"]["max"] - export_data.BOUNDS["x"]["min"])
+    # sims["scale_y"] = \
+    #     (sims["y"] - export_data.BOUNDS["y"]["min"]) / \
+    #     (export_data.BOUNDS["y"]["max"] - export_data.BOUNDS["y"]["min"])
     mean = samples.mean()
     sims["shot_prob"] = expit(
         norm.logpdf(sims["x"], mean.shot_mu_x, mean.shot_sigma_x) +
         norm.logpdf(sims["y"], mean.shot_mu_y, mean.shot_sigma_y),
+        # norm.logpdf(sims["distance"], mean.distance_mu, mean.distance_sigma) +
+        # norm.logpdf(sims["radians"], mean.radians_mu, mean.radians_sigma),
+        # beta.logpdf(sims["scale_x"], mean.alpha_x, mean.beta_x) +
+        # beta.logpdf(sims["scale_y"], mean.alpha_y, mean.beta_y),
     )
     m = sims["shot_prob"].min()
     sims["shot_prob"] = (sims["shot_prob"] - m) / (sims["shot_prob"].max() - m)
