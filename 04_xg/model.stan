@@ -8,12 +8,12 @@ data {
 parameters {
     real shot_mu_x;
     real shot_mu_y;
-    real<lower=0> shot_sigma_x;
-    real<lower=0> shot_sigma_y;
+    real<lower=0.0> shot_sigma_x;
+    real<lower=0.0> shot_sigma_y;
     real goal_mu_x;
     real goal_mu_y;
-    real<lower=0> goal_sigma_x;
-    real<lower=0> goal_sigma_y;
+    real<lower=0.0> goal_sigma_x;
+    real<lower=0.0> goal_sigma_y;
     real goal_offset;
 }
 
