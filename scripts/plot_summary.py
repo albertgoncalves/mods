@@ -24,7 +24,7 @@ def plot(ax, samples, column):
 def main():
     assert len(argv) == 4
     samples = read_csv(argv[2], low_memory=False)
-    n = len(samples.columns)
+    n = min(18, len(samples.columns))
     w = int(argv[1])
     h = ceil(n / w)
     (_, axs) = subplots(h, w, figsize=(28, 15), dpi=65)
