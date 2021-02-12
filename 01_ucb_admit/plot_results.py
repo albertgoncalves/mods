@@ -22,16 +22,14 @@ def main():
     data = read_csv(export_data.FILENAME["data"])
     export_data.set_data(data)
     data["rate"] = data.admit / data.applications
-    data.reset_index(drop=False, inplace=True)
     samples = read_csv(FILENAME["samples"])
     preds = []
     for row in data.itertuples():
         preds.append({
-            "index": row.index,
             "dept": row.dept,
             "male": row.male,
-            "mean": samples[f"admit_pred.{row.index + 1}"].mean(),
-            "std": samples[f"admit_pred.{row.index + 1}"].std(),
+            "mean": samples[f"admit_pred.{row.Index + 1}"].mean(),
+            "std": samples[f"admit_pred.{row.Index + 1}"].std(),
             "applications": row.applications,
         })
     preds = DataFrame(preds)
@@ -43,7 +41,7 @@ def main():
     }
     ax0 = ax.twinx()
     ax0.bar(
-        data["index"],
+        data.index,
         data.applications,
         color=data.dept.map(lambda i: get_cmap("Dark2")(i - 1)),
         alpha=0.2,
@@ -52,7 +50,7 @@ def main():
     ax0.set_ylabel("applications")
     ax0.grid(None)
     ax.scatter(
-        data.loc[rows, "index"],
+        data.loc[rows].index,
         data.loc[rows, "rate"],
         marker="s",
         label="obs male",
@@ -60,7 +58,7 @@ def main():
         **kwargs,
     )
     ax.scatter(
-        data.loc[~rows, "index"],
+        data.loc[~rows].index,
         data.loc[~rows, "rate"],
         marker="s",
         label="obs female",
@@ -68,7 +66,7 @@ def main():
         **kwargs,
     )
     ax.scatter(
-        preds["index"],
+        preds.index,
         preds["mean"] / preds.applications,
         marker="o",
         edgecolor="dimgray",
@@ -78,7 +76,7 @@ def main():
         **kwargs,
     )
     ax.vlines(
-        preds["index"],
+        preds.index,
         (preds["mean"] - preds["std"]) / preds.applications,
         (preds["mean"] + preds["std"]) / preds.applications,
         color="dimgray",
@@ -86,7 +84,7 @@ def main():
         zorder=1,
         **kwargs,
     )
-    ax.set_xticks(data["index"])
+    ax.set_xticks(data.index)
     ax.set_ylim([0.0, 1.0])
     ax.set_ylabel("admit rate")
     ax.legend()

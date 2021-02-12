@@ -22,7 +22,6 @@ def main():
     data = read_csv(export_data.FILENAME["data"])
     export_data.set_data(data)
     data["rate"] = data.admit / data.applications
-    data.reset_index(drop=False, inplace=True)
     samples = read_csv(FILENAME["samples"])
     assert (samples["rho.1.2"] == samples["rho.2.1"]).all()
     assert -1.0 <= samples["rho.1.2"].min()
@@ -30,11 +29,10 @@ def main():
     preds = []
     for row in data.itertuples():
         preds.append({
-            "index": row.index,
             "dept": row.dept,
             "male": row.male,
-            "mean": samples[f"admit_pred.{row.index + 1}"].mean(),
-            "std": samples[f"admit_pred.{row.index + 1}"].std(),
+            "mean": samples[f"admit_pred.{row.Index + 1}"].mean(),
+            "std": samples[f"admit_pred.{row.Index + 1}"].std(),
             "applications": row.applications,
         })
     preds = DataFrame(preds)
@@ -46,7 +44,7 @@ def main():
     }
     ax0 = axs[0].twinx()
     ax0.bar(
-        data["index"],
+        data.index,
         data.applications,
         color=data.dept.map(lambda i: get_cmap("Dark2")(i - 1)),
         alpha=0.2,
@@ -55,7 +53,7 @@ def main():
     ax0.set_ylabel("applications")
     ax0.grid(None)
     axs[0].scatter(
-        data.loc[rows, "index"],
+        data.loc[rows].index,
         data.loc[rows, "rate"],
         marker="s",
         label="obs male",
@@ -63,7 +61,7 @@ def main():
         **kwargs,
     )
     axs[0].scatter(
-        data.loc[~rows, "index"],
+        data.loc[~rows].index,
         data.loc[~rows, "rate"],
         marker="s",
         label="obs female",
@@ -71,7 +69,7 @@ def main():
         **kwargs,
     )
     axs[0].scatter(
-        preds["index"],
+        preds.index,
         preds["mean"] / preds.applications,
         marker="o",
         edgecolor="dimgray",
@@ -81,7 +79,7 @@ def main():
         **kwargs,
     )
     axs[0].vlines(
-        preds["index"],
+        preds.index,
         (preds["mean"] - preds["std"]) / preds.applications,
         (preds["mean"] + preds["std"]) / preds.applications,
         color="dimgray",
@@ -89,7 +87,7 @@ def main():
         zorder=1,
         **kwargs,
     )
-    axs[0].set_xticks(data["index"])
+    axs[0].set_xticks(data.index)
     axs[0].set_ylim([0.0, 1.0])
     axs[0].set_ylabel("admit rate")
     axs[0].legend()
