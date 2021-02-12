@@ -39,10 +39,10 @@ model {
 }
 
 generated quantities {
-    int pred_goals;
-    pred_goals = 0;
+    int goals_pred;
+    goals_pred = 0;
     for (i in 1:n_obs) {
-        pred_goals += bernoulli_logit_rng(
+        goals_pred += bernoulli_logit_rng(
             normal_lpdf(
                 normal_rng(shot_mu_x, shot_sigma_x) |
                 goal_mu_x,

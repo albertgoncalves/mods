@@ -60,7 +60,7 @@ def plot(data, samples, sims):
     ax2 = fig.add_subplot(gs[1, 1])
     ax3 = fig.add_subplot(gs[1, 2])
     histplot(
-        samples.pred_goals,
+        samples.goals_pred,
         kde=True,
         discrete=True,
         color="darkgray",
