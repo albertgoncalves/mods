@@ -8,5 +8,4 @@
 !*.py
 !*.sh
 !*.stan
-!*_ucb_admit/
-!*_xg/
+!0*_*/
