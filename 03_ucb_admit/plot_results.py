@@ -83,7 +83,7 @@ def main():
         (preds["mean"] - preds["std"]) / preds.applications,
         (preds["mean"] + preds["std"]) / preds.applications,
         color="dimgray",
-        label="pred 2*std",
+        label="pred std",
         zorder=1,
         **kwargs,
     )
