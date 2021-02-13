@@ -36,7 +36,7 @@ done
     grep -v "#" "$wd/out/output.csv" > "$wd/out/samples.csv"
     "$WD/cmdstan/bin/stansummary" "$wd/out/output.csv" \
         > "$wd/out/summary.txt"
-    "$WD/scripts/plot_summary.py" 3 "$wd/out/samples.csv" "$wd/out/summary.png"
+    "$WD/scripts/plot_summary.py" 6 "$wd/out/samples.csv" "$wd/out/summary.png"
     "$wd/plot_results.py"
 )
 (
