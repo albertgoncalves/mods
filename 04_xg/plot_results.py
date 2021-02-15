@@ -4,7 +4,7 @@ from os import environ
 from os.path import join
 
 from matplotlib.gridspec import GridSpec
-from matplotlib.pyplot import close, figure, savefig, tight_layout
+from matplotlib.pyplot import close, figure, rcParams, savefig, tight_layout
 from numpy import empty
 from pandas import read_csv
 from scipy.special import expit
@@ -53,6 +53,7 @@ def sim(samples):
 
 
 def plot(data, samples, sims):
+    rcParams.update({"font.family": "monospace"})
     fig = figure(figsize=(14, 13.5), dpi=75)
     gs = GridSpec(2, 3, figure=fig, height_ratios=[1, 4])
     ax0 = fig.add_subplot(gs[0, :])
@@ -73,21 +74,22 @@ def plot(data, samples, sims):
     kwargs = {
         "cmap": "bone",
     }
-    ax1.set_title("obs shot density")
+    ax1.set_title("obs shot clusters, density")
     kdeplot(x=data.y, y=data.x, fill=True, ax=ax1, **kwargs)
-    ax2.set_title("pred shot probability")
-    ax2.tricontourf(sims["y"], sims["x"], sims["shot_prob"], **kwargs)
-    for ax in [ax1, ax2]:
-        scatterplot(x=data.y, y=data.x, alpha=0.5, ax=ax)
-    ax3.set_title("pred goal probability")
-    ax3.tricontourf(sims["y"], sims["x"], sims["goal_prob"], **kwargs)
-    ax3.set_yticks([])
     scatterplot(
         x=data.y,
         y=data.x,
-        hue=data.goal.map({0: False, 1: True}),
-        ax=ax3,
+        hue=data.cluster,
+        palette="Dark2",
+        ax=ax1,
     )
+    ax2.set_title("pred shot probability")
+    ax2.tricontourf(sims["y"], sims["x"], sims["shot_prob"], **kwargs)
+    scatterplot(x=data.y, y=data.x, ax=ax2)
+    ax3.set_title("pred goal probability")
+    ax3.tricontourf(sims["y"], sims["x"], sims["goal_prob"], **kwargs)
+    ax3.set_yticks([])
+    scatterplot(x=data.y, y=data.x, hue=data.goal.astype("int32"), ax=ax3)
     for ax in [ax1, ax2, ax3]:
         ax.set_aspect("equal")
         ax.set_xlim([-45.0, 45.0])

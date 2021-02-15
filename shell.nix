@@ -5,6 +5,7 @@ mkShell {
             flake8
             matplotlib
             pandas
+            scikitlearn
             seaborn
         ]))
         (with rPackages; [
