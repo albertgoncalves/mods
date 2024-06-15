@@ -1,8 +1,8 @@
 data {
     int<lower=1> n_obs;
-    real rugged[n_obs];
-    int<lower=0, upper=1> cont_africa[n_obs];
-    real log_gdp[n_obs];
+    array[n_obs] real rugged;
+    array[n_obs] int<lower=0, upper=1> cont_africa;
+    array[n_obs] real log_gdp;
 }
 
 parameters {
@@ -31,7 +31,7 @@ model {
 }
 
 generated quantities {
-    real log_gdp_pred[n_obs];
+    array[n_obs] real log_gdp_pred;
     for (i in 1:n_obs) {
         log_gdp_pred[i] =
             (scale_rugged * rugged[i]) +

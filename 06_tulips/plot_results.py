@@ -40,7 +40,7 @@ def main():
         "alpha": 0.85,
     }
     line_kwargs = {
-        "ci": "sd",
+        "errorbar": "sd",
         "alpha": 0.35,
     }
     assert data.shade.nunique() == 3

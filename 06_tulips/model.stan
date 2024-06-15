@@ -31,7 +31,7 @@ model {
 }
 
 generated quantities {
-    real blooms_pred[n_obs];
+    array[n_obs] real blooms_pred;
     for (i in 1:n_obs) {
         blooms_pred[i] =
             (scale_water * water[i]) +

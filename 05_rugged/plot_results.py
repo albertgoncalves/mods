@@ -5,7 +5,7 @@
 from os import environ
 from os.path import join
 
-from matplotlib.cm import get_cmap
+from matplotlib import colormaps
 from matplotlib.pyplot import close, rcParams, savefig, subplots, tight_layout
 from pandas import DataFrame, read_csv
 from seaborn import lineplot, set_style
@@ -43,13 +43,13 @@ def main():
         axs[i].scatter(
             data.loc[rows, "rugged"],
             data.loc[rows, "log_gdp"],
-            color=get_cmap("Set1")(i),
+            color=colormaps.get_cmap("Set1")(i),
         )
         rows = preds.cont_africa == i
         lineplot(
             x=preds.loc[rows, "rugged"],
             y=preds.loc[rows, "log_gdp_pred"],
-            ci="sd",
+            errorbar="sd",
             alpha=0.35,
             ax=axs[i],
         )

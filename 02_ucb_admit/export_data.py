@@ -28,7 +28,7 @@ def main():
     set_data(df)
     data = df.to_dict(orient="list")
     data["n_obs"] = len(df)
-    data["n_dept"] = df.dept.max()
+    data["n_dept"] = int(df.dept.max())
     with open(FILENAME["json"], "w") as file:
         dump(data, file)
 

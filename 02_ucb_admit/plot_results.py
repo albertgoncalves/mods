@@ -5,7 +5,7 @@
 from os import environ
 from os.path import join
 
-from matplotlib.cm import get_cmap
+from matplotlib import colormaps
 from matplotlib.pyplot import close, savefig, subplots, tight_layout
 from pandas import DataFrame, read_csv
 from seaborn import set_style
@@ -43,7 +43,7 @@ def main():
     ax0.bar(
         data.index,
         data.applications,
-        color=data.dept.map(lambda i: get_cmap("Dark2")(i - 1)),
+        color=data.dept.map(lambda i: colormaps.get_cmap("Dark2")(i - 1)),
         alpha=0.2,
         zorder=1,
     )

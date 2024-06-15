@@ -2,7 +2,7 @@ data {
     int<lower=1> n_obs;
     vector[n_obs] x;
     vector[n_obs] y;
-    int<lower=0, upper=1> goal[n_obs];
+    array[n_obs] int<lower=0, upper=1> goal;
 }
 
 parameters {

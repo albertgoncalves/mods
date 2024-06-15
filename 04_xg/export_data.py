@@ -40,7 +40,7 @@ def set_data(df):
     assert RINK["bounds"]["y"]["lower"] <= df.y.min()
     assert df.y.max() <= RINK["bounds"]["y"]["upper"]
     columns = ["x", "y"]
-    df["cluster"] = MiniBatchKMeans(n_clusters=4) \
+    df["cluster"] = MiniBatchKMeans(n_clusters=4, n_init="auto") \
         .fit(df[columns]) \
         .predict(df[columns])
     df.goal = df.goal.astype("int32")
