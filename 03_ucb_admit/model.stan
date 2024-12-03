@@ -7,39 +7,34 @@ data {
     array[n_obs] int<lower=0, upper=1> male;
 }
 
+transformed data {
+    array[n_obs] vector<lower=0.0, upper=1.0>[2] x;
+    for (i in 1:n_obs) {
+        x[i, 1] = 1.0;
+        x[i, 2] = male[i];
+    }
+}
+
 parameters {
-    vector[n_dept] dept_advantage;
-    vector[n_dept] dept_rate;
-    real rate;
-    real advantage;
-    vector<lower=0>[2] sigma;
+    array[n_dept] vector[2] alpha_beta;
+    vector[2] mu;
+    vector<lower=0.0>[2] sigma;
     corr_matrix[2] rho;
 }
 
 transformed parameters {
-    array[n_dept] vector[2] intercept_slope;
-    vector[2] mu_rate_advantage;
-    cov_matrix[2] sigma_rho;
-    for (j in 1:n_dept) {
-        intercept_slope[j, 1] = dept_rate[j];
-        intercept_slope[j, 2] = dept_advantage[j];
-    }
-    mu_rate_advantage[1] = rate;
-    mu_rate_advantage[2] = advantage;
-    sigma_rho = quad_form_diag(rho, sigma);
+    cov_matrix[2] sigma_rho = quad_form_diag(rho, sigma);
 }
 
 model {
-    rate ~ normal(0.0, 10.0);
-    advantage ~ normal(0.0, 1.0);
-    sigma ~ cauchy(0.0, 2.0);
+    mu ~ normal(0.0, 1.0);
+    sigma ~ exponential(1.0);
     rho ~ lkj_corr(2.0);
-    intercept_slope ~ multi_normal(mu_rate_advantage, sigma_rho);
+
+    alpha_beta ~ multi_normal(mu, sigma_rho);
+
     for (i in 1:n_obs) {
-        admit[i] ~ binomial_logit(
-            applications[i],
-            dept_rate[dept[i]] + dept_advantage[dept[i]] * male[i]
-        );
+        admit[i] ~ binomial_logit(applications[i], dot_product(alpha_beta[dept[i]], x[i]));
     }
 }
 
@@ -48,7 +43,7 @@ generated quantities {
     for (i in 1:n_obs) {
         admit_pred[i] = binomial_rng(
             applications[i],
-            inv_logit(dept_rate[dept[i]] + (dept_advantage[dept[i]] * male[i]))
+            inv_logit(dot_product(alpha_beta[dept[i]], x[i]))
         );
     }
 }
