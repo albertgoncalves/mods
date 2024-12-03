@@ -105,8 +105,8 @@ def main():
     axs[1].set_xlim([-1.0, 1.0])
 
     axs[2].scatter(
-        samples[f"mu.1"],
-        samples[f"mu.2"],
+        samples["mu.1"],
+        samples["mu.2"],
         ec="w",
         alpha=0.5,
         label="mu",
