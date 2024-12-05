@@ -22,6 +22,7 @@ FILENAME = {
 def load():
     data = read_csv(export_data.FILENAME["data"])
     export_data.set_data(data)
+
     return (data, read_csv(FILENAME["samples"]))
 
 
@@ -37,6 +38,10 @@ def sim(samples):
             sims["x"][i] = x
             sims["y"][i] = y
             i += 1
+
+    sims["x"] = (sims["x"] - 100.0) / 200.0
+    sims["y"] /= 90.0
+
     mean = samples.mean()
     sims["shot_prob"] = expit(
         norm.logpdf(sims["x"], mean.shot_mu_x, mean.shot_sigma_x) +
@@ -47,19 +52,22 @@ def sim(samples):
     sims["goal_prob"] = bernoulli.pmf(1, expit(
         norm.logpdf(sims["x"], mean.goal_mu_x, mean.goal_sigma_x) +
         norm.logpdf(sims["y"], mean.goal_mu_y, mean.goal_sigma_y) +
-        mean.goal_offset,
+        mean.goal_intercept,
     ))
     return sims
 
 
 def plot(data, samples, sims):
     rcParams.update({"font.family": "monospace"})
+
     fig = figure(figsize=(14, 13.5), dpi=75)
     gs = GridSpec(2, 3, figure=fig, height_ratios=[1, 4])
+
     ax0 = fig.add_subplot(gs[0, :])
     ax1 = fig.add_subplot(gs[1, 0])
     ax2 = fig.add_subplot(gs[1, 1])
     ax3 = fig.add_subplot(gs[1, 2])
+
     histplot(
         samples.goals_pred,
         kde=True,
@@ -74,28 +82,26 @@ def plot(data, samples, sims):
     kwargs = {
         "cmap": "bone",
     }
+
     ax1.set_title("obs shot clusters, density")
     kdeplot(x=data.y, y=data.x, fill=True, ax=ax1, **kwargs)
-    scatterplot(
-        x=data.y,
-        y=data.x,
-        hue=data.cluster,
-        palette="Dark2",
-        ax=ax1,
-    )
+    scatterplot(x=data.y, y=data.x, hue=data.cluster, palette="Dark2", ax=ax1)
+
     ax2.set_title("pred shot probability")
     ax2.tricontourf(sims["y"], sims["x"], sims["shot_prob"], **kwargs)
     scatterplot(x=data.y, y=data.x, ax=ax2)
+
     ax3.set_title("pred goal probability")
     ax3.tricontourf(sims["y"], sims["x"], sims["goal_prob"], **kwargs)
-    ax3.set_yticks([])
     scatterplot(x=data.y, y=data.x, hue=data.goal.astype("int32"), ax=ax3)
+
     for ax in [ax1, ax2, ax3]:
-        ax.set_aspect("equal")
-        ax.set_xlim([-45.0, 45.0])
-        ax.set_ylim([200.0, 0.0])
+        # ax.set_aspect("equal")
+        ax.set_xlim([-0.5, 0.5])
+        ax.set_ylim([0.5, -0.5])
         ax.set_xlabel("")
         ax.set_ylabel("")
+
     tight_layout()
     savefig(FILENAME["results"])
     close()

@@ -44,23 +44,30 @@ def set_data(df):
         .fit(df[columns]) \
         .predict(df[columns])
     df.goal = df.goal.astype("int32")
-    delta = {
-        "x": df.x - RINK["goal"]["x"],
-        "y": df.y - RINK["goal"]["y"],
-    }
-    df["distance"] = \
-        sqrt((delta["x"] * delta["x"]) + (delta["y"] * delta["y"]))
-    df["radians"] = (
-        arctan2(df.y - RINK["goal"]["y"], df.x - RINK["goal"]["x"])
-    )
-    df["degrees"] = degrees(df.radians)
-    df["_x"] = RINK["goal"]["x"] + (df.distance * cos(df.radians))
-    df["_y"] = RINK["goal"]["y"] + (df.distance * sin(df.radians))
+
+    df.x = (df.x - 100.0) / 200.0
+    df.y /= 90.0
+
+    df.loc[(0.0 < df.x) & (df.goal == 1), "goal"] = 0
+
+    # delta = {
+    #     "x": df.x - RINK["goal"]["x"],
+    #     "y": df.y - RINK["goal"]["y"],
+    # }
+    # df["distance"] = \
+    #     sqrt((delta["x"] * delta["x"]) + (delta["y"] * delta["y"]))
+    # df["radians"] = (
+    #     arctan2(df.y - RINK["goal"]["y"], df.x - RINK["goal"]["x"])
+    # )
+    # df["degrees"] = degrees(df.radians)
+    # df["_x"] = RINK["goal"]["x"] + (df.distance * cos(df.radians))
+    # df["_y"] = RINK["goal"]["y"] + (df.distance * sin(df.radians))
 
 
 def main():
     df = read_csv(FILENAME["data"])
     set_data(df)
+
     columns = ["x", "y", "goal"]
     data = df[columns].to_dict(orient="list")
     data["n_obs"] = len(df)

@@ -29,7 +29,7 @@ done
     "$wd/export_data.py"
     "$wd/build/model" \
         sample \
-        num_warmup=1000 \
+        num_warmup=2000 \
         num_samples=1000 \
         data file="$wd/out/data.json" \
         output file="$wd/out/output.csv"
